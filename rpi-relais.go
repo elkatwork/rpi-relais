@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stianeikeland/go-rpio"
 )
 
-const LISTEN_ADDRESS = ":8080"
+const listenAddress = ":8080"
+const pinYellow = 4
 
 type GitHookJSON struct {
 	Head string `json:"head"`
@@ -23,6 +25,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer rpio.Close()
+
+	initServer()
 }
 
 func initServer() {
@@ -30,8 +35,9 @@ func initServer() {
 
 	router.POST("/git_hook", handleGitHook)
 	router.GET("/demo_event", handleDemoEvent)
+	router.GET("/test", handleTest)
 
-	router.Run(LISTEN_ADDRESS)
+	router.Run(listenAddress)
 }
 
 func handleGitHook(c *gin.Context) {
@@ -43,10 +49,23 @@ func handleGitHook(c *gin.Context) {
 
 	if json.Ref == "ref/heads/production" {
 		c.String(http.StatusOK, "OK")
+		go activatePin(pinYellow, time.Minute)
 	}
 }
 
 func handleDemoEvent(c *gin.Context) {
 	// TODO
 	// check demo calendar myself or by external source?
+}
+
+func handleTest(c *gin.Context) {
+	go activatePin(pinYellow, time.Minute)
+}
+
+func activatePin(p int, d time.Duration) {
+	pin := rpio.Pin(p)
+	pin.Output()
+	pin.Low()
+	time.Sleep(d)
+	pin.High()
 }
