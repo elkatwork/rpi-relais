@@ -1,0 +1,5 @@
+github.com/flosch/pongo2 #c3e5e0ef65b3da0bd32ef8fc4b920ecd9c6a8c6d
+github.com/gin-gonic/gin #c0e8cedc98790096feb051fff6297f9476623bc4
+github.com/julienschmidt/httprouter #999ba04938b528fb4fb859231ee929958b8db4a6
+github.com/mattn/go-colorable #d67e0b7d1797975196499f79bcc322c08b9f218b
+github.com/stianeikeland/go-rpio #ab68f61e91349ee0ba15aaddc320a4d8f812d65b
