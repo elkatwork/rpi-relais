@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -19,8 +18,6 @@ type GitHookJSON struct {
 }
 
 func main() {
-	fmt.Printf("Hello, world.\n")
-
 	err := rpio.Open()
 	if err != nil {
 		panic(err)
@@ -46,9 +43,9 @@ func handleGitHook(c *gin.Context) {
 	var json GitHookJSON
 
 	c.Bind(&json)
+	c.String(http.StatusOK, "OK")
 
-	if json.Ref == "ref/heads/production" {
-		c.String(http.StatusOK, "OK")
+	if json.Ref == "refs/heads/production" {
 		go activatePin(pinYellow, time.Minute)
 	}
 }
@@ -59,7 +56,10 @@ func handleDemoEvent(c *gin.Context) {
 }
 
 func handleTest(c *gin.Context) {
-	go activatePin(pinYellow, time.Minute)
+	c.Request.ParseForm()
+	if c.Request.Form.Get("p") == "1234" {
+		go activatePin(pinYellow, time.Minute)
+	}
 }
 
 func activatePin(p int, d time.Duration) {
