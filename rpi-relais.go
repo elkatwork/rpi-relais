@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,11 @@ import (
 )
 
 const listenAddress = ":8080"
-const pinYellow = 4
+const pinRed = 4
+const pinYellow = 17
+const pinHorn = 27
+
+//const pinYellow = 4
 
 type GitHookJSON struct {
 	Head string `json:"head"`
@@ -57,8 +62,20 @@ func handleDemoEvent(c *gin.Context) {
 
 func handleTest(c *gin.Context) {
 	c.Request.ParseForm()
-	if c.Request.Form.Get("p") == "1234" {
-		go activatePin(pinYellow, time.Minute)
+
+	d_param, err := strconv.Atoi(c.Request.Form.Get("d"))
+	if err != nil {
+		d_param = 0
+	}
+	duration := time.Duration(d_param) * time.Second
+
+	switch c.Request.Form.Get("c") {
+	case "red":
+		go activatePin(pinRed, duration)
+	case "yellow":
+		go activatePin(pinYellow, duration)
+	case "horn":
+		go activatePin(pinHorn, duration)
 	}
 }
 
