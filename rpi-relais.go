@@ -51,7 +51,7 @@ func handleGitHook(c *gin.Context) {
 	c.String(http.StatusOK, "OK")
 
 	if json.Ref == "refs/heads/production" {
-		go activatePin(pinYellow, time.Minute)
+		go activatePin(pinRed, time.Minute)
 	}
 }
 
