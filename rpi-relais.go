@@ -11,10 +11,10 @@ import (
 
 const listenAddress = ":8080"
 const pinRed = 4
-const pinYellow = 17
-const pinHorn = 27
 
-//const pinYellow = 4
+//const pinX = 17
+const pinYellow = 27
+const pinHorn = 22
 
 type GitHookJSON struct {
 	Head string `json:"head"`
